@@ -9,17 +9,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-// TODO: Replace with actual auth state
-const isLoggedIn = false;
-const currentUser = { name: "Test User", email: "test@example.com" };
+import { useAuth } from "@/lib/AuthContext";
 
 export default function AppLayout() {
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
-    // TODO: Implement actual logout
-    console.log("Logout clicked");
+    logout();
     navigate("/");
   };
 
@@ -42,7 +39,7 @@ export default function AppLayout() {
             >
               Find Rides
             </Link>
-            {isLoggedIn && (
+            {isAuthenticated && (
               <>
                 <Link
                   to="/rides/create"
@@ -62,7 +59,7 @@ export default function AppLayout() {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
-            {isLoggedIn ? (
+            {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
@@ -72,9 +69,9 @@ export default function AppLayout() {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel>
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium">{currentUser.name}</p>
+                      <p className="text-sm font-medium">{user.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {currentUser.email}
+                        {user.email}
                       </p>
                     </div>
                   </DropdownMenuLabel>
@@ -120,7 +117,7 @@ export default function AppLayout() {
                   <Search className="mr-2 h-4 w-4" />
                   Find Rides
                 </DropdownMenuItem>
-                {isLoggedIn && (
+                {isAuthenticated && (
                   <>
                     <DropdownMenuItem onClick={() => navigate("/rides/create")}>
                       <Plus className="mr-2 h-4 w-4" />
