@@ -2,12 +2,12 @@ from datetime import datetime, timezone
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.auth.dependencies import get_current_user
 from app.db import get_db
 from app.models import Booking, Ride, User
-from app.schemas.booking import BookingRead
+from app.schemas.booking import BookingRead, BookingWithRide
 
 router = APIRouter(tags=["bookings"])
 
@@ -95,14 +95,15 @@ def book_ride(
     return new_booking
 
 
-@router.get("/bookings/mine", response_model=list[BookingRead])
+@router.get("/bookings/mine", response_model=list[BookingWithRide])
 def get_my_bookings(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """List all bookings where current user is the passenger."""
+    """List all bookings where current user is the passenger, with ride details."""
     bookings = (
         db.query(Booking)
+        .options(joinedload(Booking.ride))
         .filter(Booking.passenger_id == current_user.user_id)
         .order_by(Booking.booking_time.desc())
         .all()
