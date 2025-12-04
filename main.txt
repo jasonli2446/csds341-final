@@ -1,0 +1,442 @@
+================================================================================
+RIDESHARE — FULL-STACK RIDE-SHARING APP
+5-Minute Presentation Outline for AI Slides Generator
+================================================================================
+
+PROJECT OVERVIEW
+================================================================================
+Project Name: RideShare
+Description: Full-stack ride-sharing web application for creating, searching, and booking shared rides.
+Tech Stack: React + Vite (frontend) | FastAPI backend | PostgreSQL database
+Purpose: CSDS341 final project demonstrating full-stack development with authentication, API design, and database migrations.
+
+================================================================================
+SLIDE-BY-SLIDE BREAKDOWN (5 minutes total)
+================================================================================
+
+SLIDE 1: TITLE SLIDE (15 seconds)
+──────────────────────────────────────────────────────────────────────────────
+Slide Title:
+  "RideShare — Full-Stack Ride-Sharing App"
+
+Subtitle:
+  "React + Vite Frontend | FastAPI Backend | PostgreSQL Database"
+
+Speaker Notes:
+  Welcome everyone. Today I'm presenting RideShare, a full-stack web application built to demonstrate modern app development. It's a working ride-sharing platform where users can create rides, search for available rides, and book seats. We built this using React for the frontend, FastAPI for the backend, and PostgreSQL for data persistence.
+
+Visuals & Assets:
+  - Screenshot: frontend/src/pages/LandingPage.tsx
+  - Suggested branding: simple car/ride icon in header
+
+Generator Hints:
+  Big centered title and subtitle. Clean, minimal design.
+
+
+SLIDE 2: PROBLEM & MOTIVATION (35 seconds)
+──────────────────────────────────────────────────────────────────────────────
+Slide Title:
+  "The Problem & Why We Built This"
+
+Bullet Points:
+  • Challenge: Finding and booking shared rides quickly for short trips
+  • Friction: Existing solutions lack speed or simplicity
+  • Our Goal: Build a lightweight, intuitive platform with instant search and one-click booking
+  • Learning Focus: Full-stack integration, JWT authentication, database migrations, and API design
+
+Speaker Notes:
+  The problem we're solving is simple: coordinating shared rides is tedious. Users want to quickly find a ride, see details, and book a seat without friction. We built RideShare to demonstrate how a modern web app handles user authentication, real-time search, and persistent booking state. Along the way, we learned about full-stack architecture, JWT token flows, schema versioning with Alembic, and clean API design.
+
+Visuals & Assets:
+  - Icon: search icon + booking icon
+  - Screenshot: frontend/src/pages/LandingPage.tsx
+  - Optional: simple pain-point diagram (e.g., "Without app" vs "With app" timeline)
+
+Generator Hints:
+  Use bullet format. Include problem statement and learning outcomes.
+
+
+SLIDE 3: SOLUTION OVERVIEW (45 seconds)
+──────────────────────────────────────────────────────────────────────────────
+Slide Title:
+  "What is RideShare?"
+
+Bullet Points:
+  • Create Rides: Post a new ride with origin, destination, departure time, and available seats
+  • Search Rides: Filter rides by location, time, and availability
+  • View Details: See ride info, driver details, and booking status
+  • Book Seats: Reserve a seat instantly with one click
+  • Manage Bookings: Dashboard shows your posted and booked rides
+
+Key Features:
+  • User authentication (register/login)
+  • Real-time ride search & filtering
+  • Booking management and status tracking
+  • Vehicle management for drivers
+
+Speaker Notes:
+  Here's what users can do in the app. First, drivers post a new ride with a route and time. Passengers then search for available rides and filter by their needs. Once they find a match, they click to see full details—driver info, exact time, number of seats available. Then they book. Everything is saved to the database, and users can manage all their rides from their dashboard. It's designed to be fast and frictionless.
+
+Visuals & Assets:
+  - Screenshots (in sequence):
+    • frontend/src/pages/CreateRidePage.tsx (create form)
+    • frontend/src/pages/SearchRidesPage.tsx (search results)
+    • frontend/src/pages/RideDetailsPage.tsx (detail view)
+    • frontend/src/pages/DashboardPage.tsx (bookings)
+
+Generator Hints:
+  Use a 4-panel grid or carousel to show each screen in sequence. Label each: "Create", "Search", "Details", "Manage".
+
+
+SLIDE 4: ARCHITECTURE & TECH STACK (50 seconds)
+──────────────────────────────────────────────────────────────────────────────
+Slide Title:
+  "Architecture & Technology Stack"
+
+Bullet Points:
+  • Frontend: React 18 + Vite, TypeScript, Tailwind CSS, Shadcn UI components
+  • Backend: FastAPI, SQLAlchemy ORM, Pydantic for validation
+  • Database: PostgreSQL with Alembic schema migrations
+  • Auth: JWT-based token authentication & refresh flows
+  • Deployment-Ready: Modular structure, environment configuration
+
+Tech Choices Explained:
+  • Vite: Lightning-fast build and HMR for development
+  • FastAPI: High performance, automatic API docs, async support
+  • SQLAlchemy: Type-safe ORM with easy relationship mapping
+  • JWT: Stateless auth, scalable across multiple servers
+
+Speaker Notes:
+  On the frontend, we chose React with Vite for speed. Vite gives us instant cold starts and hot-module replacement. We use TypeScript for type safety and Tailwind CSS for styling. On the backend, FastAPI provides automatic API documentation, async support, and excellent developer experience. We use SQLAlchemy as our ORM to safely map Python objects to database tables. For authentication, we implemented JWT tokens so the app is stateless and can scale easily. PostgreSQL is our source of truth, and Alembic manages schema migrations—think of it as "version control for your database."
+
+Visuals & Assets:
+  - Diagram: 3-box architecture (Browser with React icon → FastAPI REST API → PostgreSQL cylinder)
+  - File references:
+    • backend/app/main.py (FastAPI setup)
+    • backend/app/routers/ (API endpoints)
+    • backend/alembic/versions/001_initial_schema.py (schema)
+    • frontend/src/lib/api.ts (client calls)
+
+Generator Hints:
+  Clean, simple flow diagram. Color-code Frontend (blue), Backend (green), Database (purple).
+
+
+SLIDE 5: KEY IMPLEMENTATION DETAILS (50 seconds)
+──────────────────────────────────────────────────────────────────────────────
+Slide Title:
+  "How It Works: Key Components"
+
+Bullet Points:
+  • Authentication: JWT login → refresh token for session persistence (backend/app/auth/jwt_utils.py)
+  • Core Models: User, Vehicle, Ride, Booking (backend/app/models/)
+  • API Endpoints:
+    - POST /auth/login — user login with password hashing
+    - GET /rides — list all rides with filtering
+    - POST /rides — create a new ride
+    - POST /bookings — book a seat on a ride
+    - GET /bookings — fetch user's bookings
+  • Validation: Pydantic schemas enforce type safety (backend/app/schemas/)
+  • Database Constraints: Foreign keys, unique indices, cascading deletes
+
+Speaker Notes:
+  Let me walk through the key parts. When a user registers or logs in, the backend uses bcrypt (hashing.py) to securely store passwords. On login, we issue a JWT token; the frontend stores it and includes it in future requests. The backend validates the token to know who's making each request. We have four main database models: User (account info), Vehicle (driver's car details), Ride (trip details), and Booking (user reservations). The API is RESTful: GET /rides returns a list, POST /rides creates one, POST /bookings reserves a seat. Every request body and response is validated with Pydantic schemas—if the data doesn't match, the API rejects it. Finally, the database enforces referential integrity: a Booking always links a valid User and Ride.
+
+Code Snippet Examples:
+  Backend Route (routers/rides.py):
+    @router.get("/rides")
+    async def list_rides(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+        return db.query(Ride).offset(skip).limit(limit).all()
+
+  Frontend API Call (lib/api.ts):
+    export const fetchRides = async (token: string) => {
+      const response = await fetch(`${API_URL}/rides`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.json();
+    };
+
+Visuals & Assets:
+  - Code blocks (displayed as images or preformatted text):
+    • backend/app/routers/rides.py (GET and POST /rides)
+    • backend/app/routers/bookings.py (POST /bookings)
+    • frontend/src/lib/api.ts (fetch calls)
+    • backend/app/auth/jwt_utils.py (token logic)
+  - Diagram: Database schema showing User → Ride, Booking, Vehicle relationships
+
+Generator Hints:
+  Use syntax-highlighted code blocks. Keep snippets concise (3–5 lines each).
+
+
+SLIDE 6: DEMO / KEY USER FLOWS (50 seconds)
+──────────────────────────────────────────────────────────────────────────────
+Slide Title:
+  "Live Demo / User Journey"
+
+Bullet Points:
+  • Step 1: User registers and logs in
+  • Step 2: Driver creates a new ride (NYC → Boston, 2 seats, 10 AM)
+  • Step 3: Passenger searches for rides (filter by destination)
+  • Step 4: Passenger views ride details and books a seat
+  • Step 5: Dashboard shows both sides—driver and passenger bookings
+
+Speaker Notes:
+  Now let's see it in action. [If live demo available: I'll walk through the app quickly. If not: here are screenshots in order.] First, a new user registers with email and password. After login, they land on the dashboard. A driver clicks "Create Ride," fills in the form (starting point, destination, time, seats), and posts it. On the other side, a passenger opens the Search page, filters by destination, and sees the newly posted ride. They click into it, see the driver's info and vehicle, check seats available, and click "Book Now." Instantly, a booking is created and stored in the database. Both users now see the booking reflected in their dashboards.
+
+Visuals & Assets:
+  - Screenshots (in order):
+    1. frontend/src/pages/LoginPage.tsx (login form)
+    2. frontend/src/pages/CreateRidePage.tsx (driver creates ride)
+    3. frontend/src/pages/SearchRidesPage.tsx (passenger searches)
+    4. frontend/src/pages/RideDetailsPage.tsx (detail & book button)
+    5. frontend/src/pages/DashboardPage.tsx (bookings list)
+
+Generator Hints:
+  Show screenshots in sequence with arrows or slide transitions. Keep demo <= 40 seconds. Label each screenshot with the step number.
+
+
+SLIDE 7: DATA MODEL & SCHEMA (30 seconds)
+──────────────────────────────────────────────────────────────────────────────
+Slide Title:
+  "Database Schema & Data Model"
+
+Bullet Points:
+  • User: id, email, hashed_password, name
+  • Vehicle: id, user_id (FK), make, model, license_plate, seats
+  • Ride: id, driver_id (FK to User), vehicle_id (FK), origin, destination, departure_time, available_seats
+  • Booking: id, passenger_id (FK to User), ride_id (FK to Ride), status (pending/confirmed/cancelled)
+
+Schema Highlights:
+  • Foreign key constraints ensure data integrity
+  • Unique email per user
+  • Cascading deletes (delete user → delete their rides & bookings)
+  • Migration tracked in backend/alembic/versions/001_initial_schema.py
+
+Speaker Notes:
+  Here's how we organize data in the database. Every user has an account with a hashed password. A user can own a vehicle (driver) or just be a passenger. A Ride ties together a driver and their vehicle, plus route details. A Booking is the core transaction: it links a passenger to a ride. The migration file is our schema version control—if we ever need to add columns or tables, we create a new migration file to evolve the schema safely.
+
+Visuals & Assets:
+  - Entity-Relationship Diagram (ER diagram) showing tables and foreign keys
+  - Crop/screenshot from backend/alembic/versions/001_initial_schema.py
+  - Optional: simple SQL CREATE TABLE statements
+
+Generator Hints:
+  Use a visual ER diagram with color-coded tables and relationship arrows.
+
+
+SLIDE 8: RESULTS, LESSONS & NEXT STEPS (30 seconds)
+──────────────────────────────────────────────────────────────────────────────
+Slide Title:
+  "Results, Lessons & What's Next"
+
+Bullet Points:
+  • Results: Fully functional end-to-end ride-sharing platform with auth, search, and bookings
+  • Lessons Learned:
+    - Full-stack integration across frontend and backend
+    - RESTful API design and stateless authentication
+    - Database schema evolution and Alembic migrations
+    - Type safety with TypeScript and Pydantic
+  • Next Steps:
+    - Unit & integration tests for backend and frontend
+    - Deployment (e.g., Heroku, AWS, or Docker containers)
+    - Add payments (Stripe integration)
+    - Add ratings and reviews
+    - Real-time updates (WebSockets for live seat availability)
+    - Mobile app (React Native)
+
+Speaker Notes:
+  In building RideShare, we created a working end-to-end application from scratch. We learned how to design and implement a RESTful API, handle authentication securely, and manage database migrations in production. We also appreciated the value of type safety—TypeScript caught errors early in the frontend, and Pydantic validated API payloads on the backend. If we had more time, we'd add tests, deploy it to the cloud, and add real payments. We'd also love to implement live notifications so passengers see seat availability updates in real time. Thanks for listening—I'm happy to answer questions or do a quick live demo!
+
+Visuals & Assets:
+  - Checklist or roadmap visual (completed items vs future items)
+  - Screenshot: simple "What's Next" bullet list or roadmap graphic
+
+Generator Hints:
+  Closing slide. Use a forward-looking tone. Include QA prompt ("Questions?").
+
+
+================================================================================
+ASSET FILES & SOURCE CODE REFERENCES
+================================================================================
+
+Frontend Pages (Screenshots):
+  • frontend/src/pages/LandingPage.tsx — Landing/home page
+  • frontend/src/pages/LoginPage.tsx — User login form
+  • frontend/src/pages/RegisterPage.tsx — User registration form
+  • frontend/src/pages/CreateRidePage.tsx — Create a new ride form
+  • frontend/src/pages/SearchRidesPage.tsx — Search and filter rides
+  • frontend/src/pages/RideDetailsPage.tsx — Ride details & booking
+  • frontend/src/pages/DashboardPage.tsx — User bookings dashboard
+
+Frontend Components & Libraries:
+  • frontend/src/lib/api.ts — API client with fetch calls
+  • frontend/src/lib/AuthContext.tsx — JWT token management & user session
+  • frontend/src/components/AppLayout.tsx — Main app layout
+  • frontend/src/components/ui/ — Reusable UI components (button, card, input, label, etc.)
+
+Backend Routes & Controllers:
+  • backend/app/routers/auth.py — Login, register, token refresh endpoints
+  • backend/app/routers/rides.py — GET /rides, POST /rides, etc.
+  • backend/app/routers/bookings.py — POST /bookings, GET /bookings endpoints
+  • backend/app/routers/vehicles.py — Vehicle management endpoints
+  • backend/app/routers/users.py — User profile endpoints
+
+Backend Models & Business Logic:
+  • backend/app/models/user.py — User model
+  • backend/app/models/vehicle.py — Vehicle model
+  • backend/app/models/ride.py — Ride model
+  • backend/app/models/booking.py — Booking model
+  • backend/app/auth/jwt_utils.py — JWT token generation & validation
+  • backend/app/auth/hashing.py — Password hashing (bcrypt)
+  • backend/app/auth/dependencies.py — Dependency injection (get_current_user, get_db, etc.)
+
+Database & Configuration:
+  • backend/app/db.py — SQLAlchemy database session setup
+  • backend/app/config.py — Environment variables & app configuration
+  • backend/app/main.py — FastAPI app initialization & router registration
+  • backend/alembic/versions/001_initial_schema.py — Database schema migration
+
+Supporting Files:
+  • backend/requirements.txt — Python dependencies (FastAPI, SQLAlchemy, etc.)
+  • frontend/package.json — Node.js dependencies (React, Vite, Tailwind, etc.)
+  • README.md — Project overview and setup instructions
+
+Code Snippets for Slides:
+
+  [Backend FastAPI Endpoint - rides.py]
+  @router.get("/rides")
+  async def list_rides(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+      return db.query(Ride).offset(skip).limit(limit).all()
+
+  [Frontend API Call - api.ts]
+  export const fetchRides = async (token: string) => {
+    const response = await fetch(`${API_URL}/rides`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.json();
+  };
+
+  [JWT Login - jwt_utils.py]
+  def create_access_token(data: dict, expires_delta: timedelta | None = None):
+      to_encode = data.copy()
+      expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+      to_encode.update({"exp": expire})
+      return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+================================================================================
+TIMING BREAKDOWN
+================================================================================
+
+Slide 1 (Title):                    15 seconds
+Slide 2 (Problem & Motivation):     35 seconds
+Slide 3 (Solution Overview):        45 seconds
+Slide 4 (Architecture):             50 seconds
+Slide 5 (Implementation Details):   50 seconds
+Slide 6 (Demo / Screens):           50 seconds
+Slide 7 (Data Model):               30 seconds
+Slide 8 (Results & Next Steps):     30 seconds
+                                    ───────────
+TOTAL:                              305 seconds ≈ 5 minutes 5 seconds
+
+[Trim Recommendation: Cut demo or implementation slide by 5–10 seconds to hit exactly 5 minutes if needed.]
+
+
+================================================================================
+GENERATOR INPUT FORMAT
+================================================================================
+
+For each slide, provide the AI slides generator with the following fields:
+
+{
+  "slide_number": <integer>,
+  "title": "<string>",
+  "bullets": ["<bullet1>", "<bullet2>", "<bullet3>", ...],
+  "speaker_notes": "<string>",
+  "visuals": [
+    {
+      "type": "screenshot",
+      "file_path": "<path/to/file>",
+      "label": "<optional label>"
+    },
+    {
+      "type": "code_snippet",
+      "code": "<code>",
+      "language": "python | typescript | sql"
+    },
+    {
+      "type": "diagram",
+      "description": "<description>"
+    }
+  ],
+  "duration_seconds": <integer>,
+  "notes_for_generator": "<any special instructions>"
+}
+
+Example:
+
+{
+  "slide_number": 1,
+  "title": "RideShare — Full-Stack Ride-Sharing App",
+  "bullets": ["React + Vite Frontend", "FastAPI Backend", "PostgreSQL Database"],
+  "speaker_notes": "Welcome everyone...",
+  "visuals": [
+    {
+      "type": "screenshot",
+      "file_path": "frontend/src/pages/LandingPage.tsx",
+      "label": "App landing page"
+    }
+  ],
+  "duration_seconds": 15,
+  "notes_for_generator": "Big centered title. Minimal design."
+}
+
+
+================================================================================
+DEMO SETUP INSTRUCTIONS
+================================================================================
+
+🚀 EASIEST WAY TO START DEMO:
+
+Just run this ONE command in terminal:
+```bash
+/Users/monish/Documents/GitHub/csds341-final/start_demo.sh
+```
+
+That's it! The script will:
+- Kill old processes
+- Start both backend and frontend servers
+- Test connections
+- Show you the URLs to open
+- Display your login credentials
+
+📱 Your Demo URLs (after running script):
+- Frontend App: http://localhost:3001 (or 3000)
+- API Documentation: http://localhost:8000/docs
+- Backend API: http://localhost:8000
+
+🔐 Your Login Credentials:
+- Email: mxs1938@case.edu
+- Password: monish101
+
+🚗 Your Vehicles Ready:
+- Honda Odyssey (7 seats) - License: MON-VAN1
+- Toyota Camry (4 seats) - License: MON-CAR2
+
+📋 Demo Flow:
+1. Run the start script above
+2. Open frontend URL shown in output
+3. Sign in with your credentials
+4. Create a ride using one of your vehicles
+5. Show search functionality
+6. Demonstrate booking process
+7. Show API docs at localhost:8000/docs
+
+TROUBLESHOOTING:
+- Script handles all cleanup automatically
+- If script fails, just run it again
+- Frontend may use port 3001 if 3000 is busy
+- All setup is automatic - no manual steps needed
+
+================================================================================
+END OF OUTLINE
+================================================================================
